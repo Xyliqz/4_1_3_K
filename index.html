@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Month Rewind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --bg:#0b0b0f;
+      --card:#14141c;
+      --border:#232331;
+      --text:#f5f5f7;
+      --muted:#9f9fad;
+      --accent:#8b5cf6;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:linear-gradient(to bottom,#09090d,#101018);
+      color:var(--text);
+      min-height:100vh;
+      padding:40px 20px;
+    }
+
+    .container{
+      max-width:900px;
+      margin:0 auto;
+    }
+
+    .hero{
+      text-align:center;
+      margin-bottom:40px;
+    }
+
+    .hero h1{
+      font-size:clamp(40px,8vw,72px);
+      font-weight:800;
+      letter-spacing:-2px;
+      margin-bottom:10px;
+    }
+
+    .hero p{
+      color:var(--muted);
+      font-size:16px;
+    }
+
+    .add-btn{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      background:linear-gradient(135deg,#7c3aed,#8b5cf6);
+      color:white;
+      font-size:16px;
+      font-weight:700;
+      padding:16px;
+      cursor:pointer;
+      margin-bottom:24px;
+      transition:.2s;
+    }
+
+    .add-btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:18px;
+    }
+
+    .card{
+      background:rgba(20,20,28,.95);
+      border:1px solid var(--border);
+      border-radius:24px;
+      overflow:hidden;
+      transition:.2s;
+    }
+
+    .card:hover{
+      transform:translateY(-3px);
+      border-color:#39394b;
+    }
+
+    .card-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .delete-btn{
+      width:34px;
+      height:34px;
+      border:none;
+      border-radius:12px;
+      background:#1f1f2b;
+      border:1px solid #303042;
+      color:#ff8c8c;
+      cursor:pointer;
+      font-size:15px;
+      transition:.2s;
+      flex-shrink:0;
+    }
+
+    .delete-btn:hover{
+      background:#2b1d24;
+      border-color:#ff5c5c;
+      transform:scale(1.05);
+    }
+
+    .card img{
+      width:100%;
+      height:220px;
+      object-fit:cover;
+      display:block;
+    }
+
+    .content{
+      padding:18px;
+    }
+
+    .type{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 12px;
+      border-radius:999px;
+      background:rgba(139,92,246,.12);
+      color:#b896ff;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+
+    .title{
+      font-size:20px;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+
+    .desc{
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+      margin-bottom:16px;
+    }
+
+    .link{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      text-decoration:none;
+      background:#1b1b25;
+      border:1px solid #2a2a38;
+      padding:12px 14px;
+      border-radius:14px;
+      color:white;
+      transition:.2s;
+    }
+
+    .link:hover{
+      border-color:#8b5cf6;
+    }
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.7);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .overlay.active{
+      display:flex;
+    }
+
+    .modal{
+      width:100%;
+      max-width:500px;
+      background:#12121a;
+      border:1px solid var(--border);
+      border-radius:28px;
+      padding:24px;
+    }
+
+    .modal h2{
+      margin-bottom:18px;
+      font-size:28px;
+    }
+
+    .input{
+      width:100%;
+      background:#1b1b25;
+      border:1px solid #2c2c39;
+      border-radius:14px;
+      padding:14px;
+      color:white;
+      margin-bottom:14px;
+      font-size:15px;
+      outline:none;
+    }
+
+    textarea.input{
+      min-height:100px;
+      resize:vertical;
+    }
+
+    .save-btn{
+      width:100%;
+      border:none;
+      border-radius:14px;
+      background:#8b5cf6;
+      color:white;
+      padding:14px;
+      font-weight:700;
+      cursor:pointer;
+      font-size:15px;
+    }
+
+    .empty{
+      text-align:center;
+      color:var(--muted);
+      padding:60px 20px;
+      border:1px dashed #2d2d3a;
+      border-radius:24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="hero">
+      <h1>MONTH REWIND</h1>
+      <p>Песни, Идеи, Снимки, Линкове</p>
+    </div>
+
+    <button class="add-btn" onclick="openModal()">+ Add Memory</button>
+
+    <div class="grid" id="grid"></div>
+
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h2>Add Memory</h2>
+
+      <input class="input" id="title" placeholder="Title">
+
+      <textarea class="input" id="desc" placeholder="Description"></textarea>
+
+      <input class="input" id="link" placeholder="Spotify / YouTube link">
+
+      <input class="input" type="file" id="image" accept="image/*">
+
+      <button class="save-btn" onclick="addCard()">Save</button>
+    </div>
+  </div>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const overlay = document.getElementById('overlay');
+
+    let cards = JSON.parse(localStorage.getItem('monthRewindCards') || '[]');
+
+    function openModal(){
+      overlay.classList.add('active');
+    }
+
+    overlay.addEventListener('click',(e)=>{
+      if(e.target === overlay){
+        overlay.classList.remove('active');
+      }
+    });
+
+    function saveCards(){
+      localStorage.setItem('monthRewindCards',JSON.stringify(cards));
+    }
+
+    function renderCards(){
+      grid.innerHTML='';
+
+      if(cards.length === 0){
+        grid.innerHTML=`
+          <div class="empty">
+            <h2>No memories yet 🫠</h2>
+            <p>Add your first song, photo or moment.</p>
+          </div>
+        `;
+        return;
+      }
+
+      cards.forEach(card=>{
+        const div = document.createElement('div');
+        div.className='card';
+
+        div.innerHTML=`
+          ${card.image ? `<img src="${card.image}">` : ''}
+
+          <div class="content">
+            <div class="card-top">
+              <div class="type">✨ MEMORY</div>
+              <button class="delete-btn" onclick="deleteCard(${card.id})">✕</button>
+            </div>
+
+            <div class="title">${card.title}</div>
+
+            <div class="desc">${card.desc}</div>
+
+            ${card.link ? `
+              <a class="link" href="${card.link}" target="_blank">
+                <span>Open Link</span>
+                <span>↗</span>
+              </a>
+            ` : ''}
+          </div>
+        `;
+
+        grid.appendChild(div);
+      });
+    }
+
+    function deleteCard(id){
+      cards = cards.filter(card => card.id !== id);
+      saveCards();
+      renderCards();
+    }
+
+    function addCard(){
+      const title = document.getElementById('title').value;
+      const desc = document.getElementById('desc').value;
+      const link = document.getElementById('link').value;
+      const image = document.getElementById('image').files[0];
+
+      if(!title) return;
+
+      if(image){
+        const reader = new FileReader();
+
+        reader.onload = function(e){
+          cards.unshift({
+            id:Date.now(),
+            title,
+            desc,
+            link,
+            image:e.target.result
+          });
+
+          saveCards();
+          renderCards();
+        }
+
+        reader.readAsDataURL(image);
+      } else {
+        cards.unshift({
+          id:Date.now(),
+          title,
+          desc,
+          link,
+          image:null
+        });
+
+        saveCards();
+        renderCards();
+      }
+
+      overlay.classList.remove('active');
+
+      document.getElementById('title').value='';
+      document.getElementById('desc').value='';
+      document.getElementById('link').value='';
+      document.getElementById('image').value='';
+    }
+
+    renderCards();
+  </script>
+</body>
+</html>
